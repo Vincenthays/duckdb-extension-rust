@@ -5,48 +5,31 @@
 #include "duckdb/common/exception.hpp"
 #include "duckdb/common/string_util.hpp"
 #include "duckdb/function/scalar_function.hpp"
+#include "duckdb/function/table_function.hpp"
 #include "duckdb/main/extension_util.hpp"
 #include <duckdb/parser/parsed_data/create_scalar_function_info.hpp>
 
-// OpenSSL linked through vcpkg
-#include <openssl/opensslv.h>
-
 namespace duckdb {
 
-inline void Bigtable2ScalarFun(DataChunk &args, ExpressionState &state, Vector &result) {
-    auto &name_vector = args.data[0];
-    UnaryExecutor::Execute<string_t, string_t>(
-	    name_vector, result, args.size(),
-	    [&](string_t name) {
-			return StringVector::AddString(result, "Bigtable2 "+name.GetString()+" 🐥");;
-        });
+static unique_ptr<FunctionData> Bigtable2FunctionBind(ClientContext &context, TableFunctionBindInput &input, vector<LogicalType> &return_types, vector<string> &names) {
+    names.emplace_back("col1");
+    return_types.emplace_back(LogicalType::INTEGER);
+    return make_uniq<TableFunctionData>();
 }
 
-inline void Bigtable2OpenSSLVersionScalarFun(DataChunk &args, ExpressionState &state, Vector &result) {
-    auto &name_vector = args.data[0];
-    UnaryExecutor::Execute<string_t, string_t>(
-	    name_vector, result, args.size(),
-	    [&](string_t name) {
-			return StringVector::AddString(result, "Bigtable2 " + name.GetString() +
-                                                     ", my linked OpenSSL version is " +
-                                                     OPENSSL_VERSION_TEXT );;
-        });
-}
-
-static void LoadInternal(DatabaseInstance &instance) {
-    // Register a scalar function
-    auto bigtable2_scalar_function = ScalarFunction("bigtable2", {LogicalType::VARCHAR}, LogicalType::VARCHAR, Bigtable2ScalarFun);
-    ExtensionUtil::RegisterFunction(instance, bigtable2_scalar_function);
-
-    // Register another scalar function
-    auto bigtable2_openssl_version_scalar_function = ScalarFunction("bigtable2_openssl_version", {LogicalType::VARCHAR},
-                                                LogicalType::VARCHAR, Bigtable2OpenSSLVersionScalarFun);
-    ExtensionUtil::RegisterFunction(instance, bigtable2_openssl_version_scalar_function);
+static OperatorResultType Bigtable2Function(ExecutionContext &context, TableFunctionInput &data_p, DataChunk &input, DataChunk &output) {
+    output.SetCapacity(2);
+    output.SetValue(0, 0, Value(1));
+    output.SetValue(0, 1, Value(2));
+    return OperatorResultType::NEED_MORE_INPUT;
 }
 
 void Bigtable2Extension::Load(DuckDB &db) {
-	LoadInternal(*db.instance);
+    TableFunction bigtable_function("bigtable2", {LogicalType::VARCHAR}, nullptr, Bigtable2FunctionBind);
+    bigtable_function.in_out_function = Bigtable2Function;
+    ExtensionUtil::RegisterFunction(*db.instance, bigtable_function);    
 }
+
 std::string Bigtable2Extension::Name() {
 	return "bigtable2";
 }
