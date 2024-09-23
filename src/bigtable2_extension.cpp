@@ -21,7 +21,7 @@ static OperatorResultType Bigtable2Function(ExecutionContext &context, TableFunc
     output.SetCapacity(2);
     output.SetValue(0, 0, Value(1));
     output.SetValue(0, 1, Value(2));
-    return OperatorResultType::NEED_MORE_INPUT;
+    return OperatorResultType::FINISHED;
 }
 
 void Bigtable2Extension::Load(DuckDB &db) {
