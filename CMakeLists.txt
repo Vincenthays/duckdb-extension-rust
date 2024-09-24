@@ -53,12 +53,12 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
     GIT_TAG v0.5
 )
-
+# Set any global configuration variables such as `Rust_TOOLCHAIN` before this line!
 FetchContent_MakeAvailable(Corrosion)
 
-corrosion_import_crate(
-    MANIFEST_PATH "${CMAKE_SOURCE_DIR}/../rust-lib/Cargo.toml"
-    CRATES "bigtable2_rust"
+# Import targets defined in a package or workspace manifest `Cargo.toml` file
+corrosion_import_crate(MANIFEST_PATH "${CMAKE_SOURCE_DIR}/../rust-lib/Cargo.toml"
+CRATES "bigtable2_rust"
 )
 
 # Set extension name here
