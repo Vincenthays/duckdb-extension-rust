@@ -64,10 +64,19 @@ CRATES "duckdb_bigtable2_rust"
 # Set extension name here
 set(TARGET_NAME bigtable2)
 
+set(EXTENSION_SOURCES src/bigtable2_extension.cpp)
+
 set(EXTENSION_NAME ${TARGET_NAME}_extension)
 set(LOADABLE_EXTENSION_NAME ${TARGET_NAME}_loadable_extension)
 
 project(${TARGET_NAME})
+
+include_directories(src/include)
+
+set(EXTENSION_SOURCES src/bigtable2_extension.cpp)
+
+build_static_extension(${TARGET_NAME} ${EXTENSION_SOURCES})
+build_loadable_extension(${TARGET_NAME} " " ${EXTENSION_SOURCES})
 
 get_target_property(fake_includes duckdb_bigtable2_rust INCLUDE_DIRECTORIES)
 
