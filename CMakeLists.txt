@@ -57,8 +57,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Corrosion)
 
 # Import targets defined in a package or workspace manifest `Cargo.toml` file
-corrosion_import_crate(MANIFEST_PATH "${CMAKE_SOURCE_DIR}/../rust-lib/Cargo.toml"
-CRATES "bigtable2_rust"
+corrosion_import_crate(MANIFEST_PATH "${CMAKE_SOURCE_DIR}/../duckdb_bigtable2_rust/Cargo.toml"
+CRATES "duckdb_bigtable2_rust"
 )
 
 # Set extension name here
@@ -69,10 +69,10 @@ set(LOADABLE_EXTENSION_NAME ${TARGET_NAME}_loadable_extension)
 
 project(${TARGET_NAME})
 
-get_target_property(fake_includes bigtable2_rust INCLUDE_DIRECTORIES)
+get_target_property(fake_includes duckdb_bigtable2_rust INCLUDE_DIRECTORIES)
 
-target_link_libraries(${EXTENSION_NAME} duckdb_crypto_rust-static)
-target_link_libraries(${LOADABLE_EXTENSION_NAME} duckdb_crypto_rust)
+target_link_libraries(${EXTENSION_NAME} duckdb_bigtable2_rust-static)
+target_link_libraries(${LOADABLE_EXTENSION_NAME} duckdb_bigtable2_rust)
 
 install(
   TARGETS ${EXTENSION_NAME}
