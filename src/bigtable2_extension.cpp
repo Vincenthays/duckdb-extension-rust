@@ -9,6 +9,9 @@
 #include "duckdb/main/extension_util.hpp"
 #include <duckdb/parser/parsed_data/create_scalar_function_info.hpp>
 
+// Include the declarations of things from Rust.
+#include "rust.h"
+
 namespace duckdb {
 
 static unique_ptr<FunctionData> Bigtable2FunctionBind(ClientContext &context, TableFunctionBindInput &input, vector<LogicalType> &return_types, vector<string> &names) {
