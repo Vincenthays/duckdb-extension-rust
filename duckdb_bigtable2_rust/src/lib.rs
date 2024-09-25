@@ -90,7 +90,7 @@ impl VTab for HelloVTab {
     }
 }
 
-pub fn _bigtable2_init(conn: Connection) -> Result<()> {
+pub fn bigtable2_init(conn: Connection) -> Result<()> {
     conn.register_table_function::<HelloVTab>("hello")?;
     Ok(())
 }
@@ -98,5 +98,5 @@ pub fn _bigtable2_init(conn: Connection) -> Result<()> {
 #[no_mangle]
 pub unsafe extern "C" fn bigtable2_rust_init(db: *mut c_void) {
     let connection = Connection::open_from_raw(db.cast()).expect("can't open db connection");
-    _bigtable2_init(connection).expect("init failed");
+    bigtable2_init(connection).expect("init failed");
 }
