@@ -5,8 +5,6 @@ use duckdb::{
     },
     Connection, Result,
 };
-use duckdb_loadable_macros::duckdb_entrypoint;
-use libduckdb_sys as ffi;
 use std::{
     error::Error,
     ffi::{c_char, c_void, CString},
@@ -85,8 +83,13 @@ impl VTab for HelloVTab {
 
 // Exposes a extern C function named "bigtable2_init" in the compiled dynamic library,
 // the "entrypoint" that duckdb will use to load the extension.
-#[duckdb_entrypoint]
-pub fn bigtable2_init(conn: Connection) -> Result<(), Box<dyn Error>> {
+pub fn _bigtable2_init(conn: Connection) -> Result<(), Box<dyn Error>> {
     conn.register_table_function::<HelloVTab>("hello")?;
     Ok(())
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn bigtable2_rust_init(db: *mut c_void) {
+    let connection = Connection::open_from_raw(db.cast()).expect("can't open db connection");
+    _bigtable2_init(connection).expect("init failed");
 }

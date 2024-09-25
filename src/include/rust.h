@@ -5,3 +5,10 @@
 #include <ostream>
 #include <new>
 
+
+
+extern "C" {
+
+void bigtable2_rust_init(void *db);
+
+}  // extern "C"

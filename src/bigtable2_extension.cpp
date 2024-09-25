@@ -14,23 +14,9 @@
 
 namespace duckdb {
 
-static unique_ptr<FunctionData> Bigtable2FunctionBind(ClientContext &context, TableFunctionBindInput &input, vector<LogicalType> &return_types, vector<string> &names) {
-    names.emplace_back("col1");
-    return_types.emplace_back(LogicalType::INTEGER);
-    return make_uniq<TableFunctionData>();
-}
-
-static OperatorResultType Bigtable2Function(ExecutionContext &context, TableFunctionInput &data_p, DataChunk &input, DataChunk &output) {
-    output.SetCapacity(2);
-    output.SetValue(0, 0, Value(1));
-    output.SetValue(0, 1, Value(2));
-    return OperatorResultType::FINISHED;
-}
-
 void Bigtable2Extension::Load(DuckDB &db) {
-    TableFunction bigtable_function("bigtable2", {LogicalType::VARCHAR}, nullptr, Bigtable2FunctionBind);
-    bigtable_function.in_out_function = Bigtable2Function;
-    ExtensionUtil::RegisterFunction(*db.instance, bigtable_function);    
+    void *db_void_ptr = static_cast<void*>(&db);
+    bigtable2_rust_init(db_void_ptr);
 }
 
 std::string Bigtable2Extension::Name() {

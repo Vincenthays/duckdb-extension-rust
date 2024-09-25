@@ -10,5 +10,3 @@ crate-type = ["staticlib"]
 
 [dependencies]
 duckdb = { version = "1.0", features = ["vtab"] }
-duckdb-loadable-macros = "0.1"
-libduckdb-sys = "1.0"
