@@ -42,16 +42,12 @@ impl VTab for HelloVTab {
     unsafe fn bind(bind: &BindInfo, data: *mut HelloBindData) -> Result<(), Box<dyn Error>> {
         bind.add_result_column("column0", LogicalType::new(LogicalTypeId::Varchar));
         let param = bind.get_parameter(0).to_string();
-        unsafe {
-            (*data).name = CString::new(param).unwrap().into_raw();
-        }
+        (*data).name = CString::new(param).unwrap().into_raw();
         Ok(())
     }
 
     unsafe fn init(_: &InitInfo, data: *mut HelloInitData) -> Result<(), Box<dyn Error>> {
-        unsafe {
-            (*data).done = false;
-        }
+        (*data).done = false;
         Ok(())
     }
 
@@ -69,8 +65,9 @@ impl VTab for HelloVTab {
                 let result = CString::new(format!("Hello {}", name.to_str()?))?;
                 // Can't consume the CString
                 (*bind_info).name = CString::into_raw(name);
-                vector.insert(0, result);
-                output.set_len(1);
+                vector.insert(0, result.clone());
+                vector.insert(1, result);
+                output.set_len(2);
             }
         }
         Ok(())
