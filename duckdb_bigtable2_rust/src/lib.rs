@@ -40,7 +40,7 @@ impl VTab for HelloVTab {
     type BindData = HelloBindData;
 
     unsafe fn bind(bind: &BindInfo, data: *mut HelloBindData) -> Result<(), Box<dyn Error>> {
-        bind.add_result_column("pe_id", LogicalType::new(LogicalTypeId::Integer));
+        bind.add_result_column("pe_id", LogicalType::new(LogicalTypeId::UBigint));
         bind.add_result_column("title", LogicalType::new(LogicalTypeId::Varchar));
         bind.add_result_column("price", LogicalType::new(LogicalTypeId::Float));
         bind.add_result_column("unit_price", LogicalType::new(LogicalTypeId::Float));
@@ -64,6 +64,8 @@ impl VTab for HelloVTab {
                 output.set_len(0);
             } else {
                 (*init_info).done = true;
+                let name = CString::from_raw((*bind_info).name);
+                let name = name.to_str()?;
 
                 let vec_pe_id = output.flat_vector(0);
                 let vec_title = output.flat_vector(1);
@@ -71,15 +73,13 @@ impl VTab for HelloVTab {
                 let vec_base_price = output.flat_vector(3);
                 let vec_unit_price = output.flat_vector(4);
 
-                for i in 0..10 {
-                    vec_pe_id.insert(i, 123_i32.to_be_bytes().as_slice());
-                    vec_title.insert(i, CString::new(format!("title {i}"))?);
-                    vec_price.insert(i, 1.3_f32.to_be_bytes().as_slice());
-                    vec_base_price.insert(i, 1.5_f32.to_be_bytes().as_slice());
-                    vec_unit_price.insert(i, 1.7_f32.to_be_bytes().as_slice())
-                }
+                vec_pe_id.insert(0, 123_u64.to_be_bytes().as_slice());
+                vec_title.insert(0, CString::new(format!("title {name}"))?);
+                vec_price.insert(0, 1.3_f32.to_be_bytes().as_slice());
+                vec_base_price.insert(0, 1.5_f32.to_be_bytes().as_slice());
+                vec_unit_price.insert(0, 1.7_f32.to_be_bytes().as_slice());
 
-                output.set_len(10);
+                output.set_len(1);
             }
         }
         Ok(())
