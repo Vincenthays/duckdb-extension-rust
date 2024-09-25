@@ -41,10 +41,7 @@ impl VTab for HelloVTab {
     type InitData = HelloInitData;
     type BindData = HelloBindData;
 
-    unsafe fn bind(
-        bind: &BindInfo,
-        data: *mut HelloBindData,
-    ) -> Result<(), Box<dyn Error>> {
+    unsafe fn bind(bind: &BindInfo, data: *mut HelloBindData) -> Result<(), Box<dyn Error>> {
         bind.add_result_column("column0", LogicalType::new(LogicalTypeId::Varchar));
         let param = bind.get_parameter(0).to_string();
         unsafe {
@@ -53,20 +50,14 @@ impl VTab for HelloVTab {
         Ok(())
     }
 
-    unsafe fn init(
-        _: &InitInfo,
-        data: *mut HelloInitData,
-    ) -> Result<(), Box<dyn Error>> {
+    unsafe fn init(_: &InitInfo, data: *mut HelloInitData) -> Result<(), Box<dyn Error>> {
         unsafe {
             (*data).done = false;
         }
         Ok(())
     }
 
-    unsafe fn func(
-        func: &FunctionInfo,
-        output: &mut DataChunk,
-    ) -> Result<(), Box<dyn Error>> {
+    unsafe fn func(func: &FunctionInfo, output: &mut DataChunk) -> Result<(), Box<dyn Error>> {
         let init_info = func.get_init_data::<HelloInitData>();
         let bind_info = func.get_bind_data::<HelloBindData>();
 
