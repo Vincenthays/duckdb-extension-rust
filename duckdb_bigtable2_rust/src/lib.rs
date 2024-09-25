@@ -85,8 +85,8 @@ impl VTab for HelloVTab {
         Ok(())
     }
 
-    fn parameters() -> Option<Vec<LogicalType>> {
-        Some(vec![LogicalType::new(LogicalTypeId::Varchar)])
+    fn named_parameters() -> Option<Vec<(String, LogicalType)>> {
+        Some(vec![("title".to_string(), LogicalType::new(LogicalTypeId::Varchar))])
     }
 }
 
