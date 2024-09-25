@@ -40,7 +40,11 @@ impl VTab for HelloVTab {
     type BindData = HelloBindData;
 
     unsafe fn bind(bind: &BindInfo, data: *mut HelloBindData) -> Result<(), Box<dyn Error>> {
-        bind.add_result_column("column0", LogicalType::new(LogicalTypeId::Varchar));
+        bind.add_result_column("pe_id", LogicalType::new(LogicalTypeId::Integer));
+        bind.add_result_column("title", LogicalType::new(LogicalTypeId::Varchar));
+        bind.add_result_column("price", LogicalType::new(LogicalTypeId::Float));
+        bind.add_result_column("unit_price", LogicalType::new(LogicalTypeId::Float));
+        bind.add_result_column("base_price", LogicalType::new(LogicalTypeId::Float));
         let param = bind.get_parameter(0).to_string();
         (*data).name = CString::new(param).unwrap().into_raw();
         Ok(())
@@ -60,14 +64,22 @@ impl VTab for HelloVTab {
                 output.set_len(0);
             } else {
                 (*init_info).done = true;
-                let vector = output.flat_vector(0);
-                let name = CString::from_raw((*bind_info).name);
-                let result = CString::new(format!("Hello {}", name.to_str()?))?;
-                // Can't consume the CString
-                (*bind_info).name = CString::into_raw(name);
-                vector.insert(0, result.clone());
-                vector.insert(1, result);
-                output.set_len(2);
+
+                let vec_pe_id = output.flat_vector(0);
+                let vec_title = output.flat_vector(1);
+                let vec_price = output.flat_vector(2);
+                let vec_base_price = output.flat_vector(3);
+                let vec_unit_price = output.flat_vector(4);
+
+                for i in 0..10 {
+                    vec_pe_id.insert(i, 123_i32.to_be_bytes().as_slice());
+                    vec_title.insert(i, CString::new(format!("title {i}"))?);
+                    vec_price.insert(i, 1.3_f32.to_be_bytes().as_slice());
+                    vec_base_price.insert(i, 1.5_f32.to_be_bytes().as_slice());
+                    vec_unit_price.insert(i, 1.7_f32.to_be_bytes().as_slice())
+                }
+
+                output.set_len(10);
             }
         }
         Ok(())
