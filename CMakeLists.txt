@@ -81,6 +81,7 @@ build_loadable_extension(${TARGET_NAME} " " ${EXTENSION_SOURCES})
 get_target_property(fake_includes duckdb_bigtable2_rust INCLUDE_DIRECTORIES)
 
 target_link_libraries(${EXTENSION_NAME} duckdb_bigtable2_rust-static)
+target_link_libraries(${EXTENSION_NAME} "-framework CoreFoundation")
 target_link_libraries(${LOADABLE_EXTENSION_NAME} duckdb_bigtable2_rust)
 
 install(
