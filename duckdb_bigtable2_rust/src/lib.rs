@@ -81,9 +81,7 @@ impl VTab for HelloVTab {
     }
 }
 
-// Exposes a extern C function named "bigtable2_init" in the compiled dynamic library,
-// the "entrypoint" that duckdb will use to load the extension.
-pub fn _bigtable2_init(conn: Connection) -> Result<(), Box<dyn Error>> {
+pub fn _bigtable2_init(conn: Connection) -> Result<()> {
     conn.register_table_function::<HelloVTab>("hello")?;
     Ok(())
 }
