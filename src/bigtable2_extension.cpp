@@ -15,8 +15,7 @@
 namespace duckdb {
 
 void Bigtable2Extension::Load(DuckDB &db) {
-    void *db_void_ptr = static_cast<void*>(&db);
-    bigtable2_rust_init(db_void_ptr);
+    bigtable2_rust_init(static_cast<void*>(&db));
 }
 
 std::string Bigtable2Extension::Name() {
