@@ -15,16 +15,7 @@ struct HelloBindData {
     name: *mut c_char,
 }
 
-impl Free for HelloBindData {
-    fn free(&mut self) {
-        unsafe {
-            if self.name.is_null() {
-                return;
-            }
-            drop(CString::from_raw(self.name));
-        }
-    }
-}
+impl Free for HelloBindData {}
 
 #[repr(C)]
 struct HelloInitData {
