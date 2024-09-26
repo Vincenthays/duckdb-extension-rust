@@ -65,11 +65,11 @@ impl VTab for HelloVTab {
                 let vec_unit_price = output.flat_vector(4);
 
                 for i in 0..10 {
-                    vec_pe_id.insert(i, 123_u64.to_ne_bytes().as_slice().clone());
+                    vec_pe_id.insert(i, 123_u64.to_ne_bytes().as_slice());
                     vec_title.insert(i, CString::new(format!("title {name}"))?);
-                    vec_price.insert(i, 1.3_f32.to_ne_bytes().as_slice().clone());
-                    vec_base_price.insert(i, 1.5_f32.to_ne_bytes().as_slice().clone());
-                    vec_unit_price.insert(i, 1.7_f32.to_ne_bytes().as_slice().clone());
+                    vec_price.insert(i, 1.3_f32.to_ne_bytes().as_slice());
+                    vec_base_price.insert(i, 1.5_f32.to_ne_bytes().as_slice());
+                    vec_unit_price.insert(i, 1.7_f32.to_ne_bytes().as_slice());
                 }
                 output.set_len(10);
             }
