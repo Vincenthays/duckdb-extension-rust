@@ -36,6 +36,7 @@ impl VTab for HelloVTab {
         bind.add_result_column("price", LogicalType::new(LogicalTypeId::Float));
         bind.add_result_column("unit_price", LogicalType::new(LogicalTypeId::Float));
         bind.add_result_column("base_price", LogicalType::new(LogicalTypeId::Float));
+
         let param = bind.get_parameter(0).to_string();
         (*data).name = CString::new(param).unwrap().into_raw();
         Ok(())
