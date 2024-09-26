@@ -51,29 +51,27 @@ impl VTab for HelloVTab {
         let init_info = func.get_init_data::<HelloInitData>();
         let bind_info = func.get_bind_data::<HelloBindData>();
 
-        unsafe {
-            if (*init_info).done {
-                output.set_len(0);
-            } else {
-                (*init_info).done = true;
-                let name = CString::from_raw((*bind_info).name);
-                let name = name.to_str()?;
+        if (*init_info).done {
+            output.set_len(0);
+        } else {
+            (*init_info).done = true;
+            let name = CString::from_raw((*bind_info).name);
+            let name = name.to_str()?;
 
-                let vec_pe_id = output.flat_vector(0);
-                let vec_title = output.flat_vector(1);
-                let vec_price = output.flat_vector(2);
-                let vec_base_price = output.flat_vector(3);
-                let vec_unit_price = output.flat_vector(4);
+            let vec_pe_id = output.flat_vector(0);
+            let vec_title = output.flat_vector(1);
+            let vec_price = output.flat_vector(2);
+            let vec_base_price = output.flat_vector(3);
+            let vec_unit_price = output.flat_vector(4);
 
-                for i in 0..10 {
-                    vec_pe_id.insert(i, 123_u64.to_ne_bytes().as_slice());
-                    vec_title.insert(i, CString::new(format!("title {name}"))?);
-                    vec_price.insert(i, 1.3_f32.to_ne_bytes().as_slice());
-                    vec_base_price.insert(i, 1.5_f32.to_ne_bytes().as_slice());
-                    vec_unit_price.insert(i, 1.7_f32.to_ne_bytes().as_slice());
-                }
-                output.set_len(10);
+            for i in 0..10 {
+                vec_pe_id.insert(i, 123_u64.to_ne_bytes().as_slice());
+                vec_title.insert(i, CString::new(format!("title {name}"))?);
+                vec_price.insert(i, 1.3_f32.to_ne_bytes().as_slice());
+                vec_base_price.insert(i, 1.5_f32.to_ne_bytes().as_slice());
+                vec_unit_price.insert(i, 1.7_f32.to_ne_bytes().as_slice());
             }
+            output.set_len(10);
         }
         Ok(())
     }
